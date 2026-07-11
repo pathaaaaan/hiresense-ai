@@ -16,6 +16,9 @@ export function Navbar() {
         <nav className="flex items-center gap-6 text-sm font-medium text-ink-muted">
           {user ? (
             <>
+              <Link to="/dashboard" className="hover:text-ink transition-colors">
+                Dashboard
+              </Link>
               <Link to="/resume" className="hover:text-ink transition-colors">
                 Resume Analysis
               </Link>

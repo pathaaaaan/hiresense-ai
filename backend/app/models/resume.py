@@ -33,3 +33,7 @@ class Resume(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     owner = relationship("User", back_populates="resumes")
+    interview_sessions = relationship(
+        "InterviewSession", back_populates="resume", cascade="all, delete-orphan"
+    )
+    roadmaps = relationship("Roadmap", back_populates="resume", cascade="all, delete-orphan")

@@ -18,3 +18,7 @@ class User(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     resumes = relationship("Resume", back_populates="owner", cascade="all, delete-orphan")
+    interview_sessions = relationship(
+        "InterviewSession", back_populates="user", cascade="all, delete-orphan"
+    )
+    roadmaps = relationship("Roadmap", back_populates="user", cascade="all, delete-orphan")

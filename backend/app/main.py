@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import auth, resume
+from app.api import analytics, auth, interviews, resume, roadmaps
 from app.config import get_settings
 from app.database import Base, engine
 
@@ -23,6 +23,9 @@ app.add_middleware(
 
 app.include_router(auth.router)
 app.include_router(resume.router)
+app.include_router(interviews.router)
+app.include_router(roadmaps.router)
+app.include_router(analytics.router)
 
 
 @app.on_event("startup")
