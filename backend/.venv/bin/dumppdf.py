@@ -1,4 +1,4 @@
-#!/Users/hasnainpathan/Downloads/files/hiresense-ai/backend/.venv/bin/python3
+#!/Users/hasnainpathan/Desktop/hiresense-ai/backend/.venv/bin/python3
 """Extract pdf structure in XML format"""
 import logging
 import os.path

@@ -1,4 +1,4 @@
-#!/Users/hasnainpathan/Downloads/files/hiresense-ai/backend/.venv/bin/python3
+#!/Users/hasnainpathan/Desktop/hiresense-ai/backend/.venv/bin/python3
 """A command line tool for extracting text and images from PDF and
 output it to plain text, html, xml or tags."""
 import argparse

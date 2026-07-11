@@ -1,0 +1,68 @@
+# ─── Environment variables (NEVER commit these) ───────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+
+# ─── Python / Backend ──────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+ENV/
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.log
+
+# Alembic
+# (keep alembic/versions/ – those are migration scripts that must be committed)
+
+# ─── Node / Frontend ───────────────────────────────────────────────────────────
+node_modules/
+frontend/dist/
+frontend/.vite/
+.npm
+.yarn-integrity
+*.tsbuildinfo
+
+# ─── OS artifacts ──────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ─── IDE / Editor ──────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ─── Docker ────────────────────────────────────────────────────────────────────
+# (docker-compose.yml is intentionally committed)
+
+# ─── Uploads / user data ───────────────────────────────────────────────────────
+uploads/
+*.pdf
+!sample-data/*.pdf

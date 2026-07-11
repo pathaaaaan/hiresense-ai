@@ -1,4 +1,4 @@
-#!/Users/hasnainpathan/Downloads/files/hiresense-ai/backend/.venv/bin/python3
+#!/Users/hasnainpathan/Desktop/hiresense-ai/backend/.venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

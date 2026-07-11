@@ -1,164 +1,267 @@
-# HireSense AI
+# HireSense AI 🎯
 
-An AI-powered interview preparation platform: resume upload → ATS scoring →
-(next) AI mock interviews → skill-gap roadmaps → progress dashboard.
+> An AI-powered interview preparation platform — upload your resume, generate a personalized mock interview, get real-time AI feedback, and follow a custom learning roadmap.
 
-## What's built in this slice
+---
 
-This repo currently implements **Auth + Resume Upload/ATS Scoring**, fully
-working end to end, plus the folder architecture for the rest of the spec
-(mock interviews, answer evaluation, skill-gap roadmap, dashboard) so those
-flows can be added without restructuring anything.
+## ✨ Features
 
-**Working now:**
-- Register / login with JWT auth (FastAPI + PostgreSQL)
-- PDF resume upload → text extraction (PyMuPDF, falling back to pdfplumber)
-- AI-based structured parsing (skills / education / projects / experience) via Gemini 2.5 Flash
-- AI-based ATS scoring (score, missing skills, weaknesses, suggestions) via Gemini 2.5 Flash
-- React + TypeScript + Tailwind frontend: landing page, auth pages, resume analysis page with a live ATS score gauge
-- Runs fully without a Gemini key — a deterministic mock AI layer kicks in automatically (see "Running without an API key" below)
+| Flow | Status |
+|------|--------|
+| JWT-based Registration & Login | ✅ Complete |
+| PDF Resume Upload & Parsing | ✅ Complete |
+| AI Resume Analysis (skills / education / projects / experience) | ✅ Complete |
+| ATS Scoring with Weaknesses & Suggestions | ✅ Complete |
+| AI Mock Interview Generation (HR + Technical + Project questions) | ✅ Complete |
+| Question-by-question Interview Session with Timer | ✅ Complete |
+| Real-time AI Answer Evaluation (5-rubric scoring) | ✅ Complete |
+| Final Interview Report with Radar Chart | ✅ Complete |
+| Skill Gap Analysis & Personalized Learning Roadmap | ✅ Complete |
+| Progress Dashboard with Charts | ✅ Complete |
+| Mock AI fallback (works without a Gemini key) | ✅ Complete |
 
-**Not built yet (scaffolded only):** interview question generation, mock
-interview sessions, answer evaluation, skill-gap analyzer, roadmaps, and the
-full analytics dashboard. See "Extending this" below for how to add them
-using the same pattern.
+---
 
-## Project structure
+## 🗺️ Application Flow
 
 ```
-backend/
-  app/
-    api/          # FastAPI routers (auth, resumes)
-    core/         # security (JWT/hashing), auth dependency
-    models/       # SQLAlchemy models (User, Resume)
-    schemas/      # Pydantic request/response schemas
-    services/     # business logic (resume parsing, ATS scoring, AI client)
-    prompts/      # dedicated prompt builders per AI task
-    config.py     # environment settings
-    database.py   # SQLAlchemy engine/session
-    main.py       # app entrypoint
-  requirements.txt
-  Dockerfile
-  .env.example
-
-frontend/
-  src/
-    components/   # Navbar, ProtectedRoute, ATSGauge, ui/ (Button, Input, Card)
-    pages/         # Landing, Login, Register, ResumeAnalysis
-    hooks/         # useAuth (auth context)
-    services/      # axios client + API calls
-    types/         # shared TS types
-  .env.example
-
-sample-data/
-  sample_resume.pdf   # generated test PDF you can upload immediately
-
-docker-compose.yml     # backend + Postgres for local dev
+Register / Login
+       │
+       ▼
+Upload PDF Resume ──▶ ATS Score + Extracted Skills
+       │
+       ▼
+Choose Target Role (AI/ML Engineer, Full Stack, etc.)
+       │
+       ▼
+AI Generates 20 Questions (5 HR · 10 Technical · 5 Project)
+       │
+       ▼
+Mock Interview — answer one question at a time
+       │
+       ▼
+AI Evaluates Each Answer (Technical · Communication · Clarity · Confidence · Completeness)
+       │
+       ▼
+Final Report — overall score, radar chart, ideal answers, feedback
+       │
+       ▼
+Skill Gap Analysis ──▶ Personalized Learning Roadmap
+       │
+       ▼
+Dashboard — tracks all interviews, ATS scores, progress over time
 ```
 
-## Running it locally
+---
+
+## 🛠️ Tech Stack
+
+### Backend
+- **FastAPI** — REST API framework
+- **SQLAlchemy** — ORM with PostgreSQL
+- **Gemini 2.5 Flash** — AI for parsing, generation, and evaluation
+- **PyMuPDF + pdfplumber** — PDF text extraction
+- **python-jose** — JWT authentication
+- **bcrypt** — password hashing
+- **Pydantic v2** — request/response validation
+
+### Frontend
+- **React 19 + TypeScript** — UI framework
+- **Vite** — build tool
+- **Tailwind CSS** — styling
+- **Shadcn UI** — component library
+- **Recharts** — progress and radar charts
+- **Framer Motion** — animations
+- **React Router v6** — routing
+- **Axios** — HTTP client
+
+### Database
+- **PostgreSQL** — primary database
+- Tables: `users`, `resumes`, `interview_sessions`, `questions`, `responses`, `evaluations`, `roadmaps`
+
+---
+
+## 📁 Project Structure
+
+```
+hiresense-ai/
+├── backend/
+│   ├── app/
+│   │   ├── api/               # FastAPI routers
+│   │   │   ├── auth.py            # register, login, /me
+│   │   │   ├── resume.py          # upload, analyze, list
+│   │   │   ├── interviews.py      # create session, submit answers, finish
+│   │   │   ├── roadmaps.py        # get roadmap per resume
+│   │   │   └── analytics.py       # dashboard metrics
+│   │   ├── core/
+│   │   │   ├── security.py        # JWT + bcrypt helpers
+│   │   │   └── deps.py            # get_current_user FastAPI dependency
+│   │   ├── models/                # SQLAlchemy ORM models
+│   │   ├── schemas/               # Pydantic request/response schemas
+│   │   ├── services/              # Business logic + AI service layer
+│   │   │   ├── ai_service.py          # Gemini client (with mock fallback)
+│   │   │   ├── resume_parser.py       # PDF → structured data
+│   │   │   ├── ats_service.py         # ATS scoring
+│   │   │   ├── interview_service.py   # question generation
+│   │   │   ├── evaluation_service.py  # answer evaluation
+│   │   │   └── roadmap_service.py     # skill gap + roadmap
+│   │   ├── prompts/               # Gemini prompt builders
+│   │   ├── config.py              # pydantic-settings env config
+│   │   ├── database.py            # SQLAlchemy engine + session
+│   │   └── main.py                # app entrypoint + CORS
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   └── .env.example
+│
+├── frontend/
+│   └── src/
+│       ├── components/
+│       │   ├── Navbar.tsx
+│       │   ├── ProtectedRoute.tsx
+│       │   ├── ATSGauge.tsx
+│       │   └── ui/               # Button, Card, Input, Skeleton, Toast…
+│       ├── pages/
+│       │   ├── Landing.tsx
+│       │   ├── Login.tsx
+│       │   ├── Register.tsx
+│       │   ├── ResumeAnalysis.tsx
+│       │   ├── Dashboard.tsx
+│       │   ├── Interview.tsx
+│       │   ├── InterviewResults.tsx
+│       │   └── Roadmap.tsx
+│       ├── hooks/useAuth.tsx      # auth context + provider
+│       ├── services/              # typed Axios API wrappers
+│       └── types/index.ts         # shared TypeScript types
+│
+├── sample-data/
+│   └── sample_resume.pdf          # ready-to-use test resume
+├── docker-compose.yml
+└── .gitignore
+```
+
+---
+
+## 🚀 Running Locally
 
 ### 1. Database
 
-Easiest path — use Docker Compose for Postgres (and optionally the backend):
-
+Start PostgreSQL with Docker:
 ```bash
 docker compose up db
 ```
-
-Or point `DATABASE_URL` at any Postgres instance, including a free
-[Neon](https://neon.tech) database for something closer to the deployment target.
+Or point `DATABASE_URL` at any Postgres instance (including [Neon](https://neon.tech) free tier).
 
 ### 2. Backend
 
 ```bash
 cd backend
-python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env      # edit DATABASE_URL / JWT_SECRET / GEMINI_API_KEY
-uvicorn app.main:app --reload
+cp .env.example .env          # fill in DATABASE_URL, JWT_SECRET, GEMINI_API_KEY
+uvicorn app.main:app --reload --port 8000
 ```
 
-Tables are created automatically on startup in development (`Base.metadata.create_all`).
-For production, switch to Alembic migrations instead — see "Production notes" below.
-
-API docs: `http://localhost:8000/docs`
-Health check: `http://localhost:8000/api/health`
+- API docs: http://localhost:8000/docs
+- Health: http://localhost:8000/api/health
+- Tables are auto-created on first startup (dev only — use Alembic for production)
 
 ### 3. Frontend
 
 ```bash
 cd frontend
 npm install
-cp .env.example .env      # VITE_API_URL, defaults to http://localhost:8000
+cp .env.example .env          # VITE_API_URL=http://localhost:8000
 npm run dev
 ```
 
-App: `http://localhost:5173`
+App: http://localhost:5173
 
-### 4. Try it
+### 4. Try it end-to-end
 
-1. Go to `/register`, create an account.
-2. Go to `/resume`, upload `sample-data/sample_resume.pdf`, pick a target role, click **Analyze resume**.
-3. You'll get an ATS score, extracted skills, missing skills, weaknesses, and suggestions.
+1. Register at `/register`
+2. Upload `sample-data/sample_resume.pdf` at `/resume`
+3. Go to `/dashboard` → pick a role → **Start interview**
+4. Answer each question and get instant AI feedback
+5. View your final report and skill roadmap
 
-## Running without a Gemini API key
+---
 
-`app/services/ai_service.py` checks whether `GEMINI_API_KEY` is a real key.
-If it's still the placeholder value, every AI call returns a deterministic
-mock response instead of calling the network — computed from simple keyword
-matching against the resume text, so the demo is still meaningful (a resume
-listing more relevant skills gets a higher mock score). Nothing else in the
-app needs to know or care whether it's talking to a mock or the real model.
+## 🔑 Environment Variables
 
-To use the real model: get a key from [Google AI Studio](https://aistudio.google.com/),
-set `GEMINI_API_KEY` in `backend/.env`, restart the backend.
+### Backend (`backend/.env`)
 
-## Environment variables
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | PostgreSQL connection string |
+| `JWT_SECRET` | Random secret for signing tokens — **change in production** |
+| `JWT_ALGORITHM` | `HS256` |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | `1440` (24h) |
+| `GEMINI_API_KEY` | From [Google AI Studio](https://aistudio.google.com/) — leave as placeholder for mock mode |
+| `GEMINI_MODEL` | `gemini-2.5-flash` |
+| `CORS_ORIGINS` | Comma-separated allowed frontend origins |
+| `ENVIRONMENT` | `development` or `production` |
+| `MAX_UPLOAD_MB` | `5` |
 
-See `backend/.env.example` and `frontend/.env.example` for the full list.
-Key ones:
+### Frontend (`frontend/.env`)
 
-| Variable | Where | Purpose |
-|---|---|---|
-| `DATABASE_URL` | backend | Postgres connection string |
-| `JWT_SECRET` | backend | Signs auth tokens — set a real random value in production |
-| `GEMINI_API_KEY` | backend | Gemini API key; left as placeholder = mock AI mode |
-| `CORS_ORIGINS` | backend | Comma-separated list of allowed frontend origins |
-| `VITE_API_URL` | frontend | Backend base URL |
+| Variable | Description |
+|----------|-------------|
+| `VITE_API_URL` | Backend base URL (e.g. `http://localhost:8000`) |
 
-## Deployment (as specified)
+---
 
-- **Frontend → Vercel**: set the project root to `frontend/`, build command `npm run build`, output `dist/`, and set `VITE_API_URL` to your Render backend URL.
-- **Backend → Render**: create a Web Service from `backend/`, using the included `Dockerfile` (or `uvicorn app.main:app --host 0.0.0.0 --port $PORT` as the start command), and set the environment variables above.
-- **Database → Neon PostgreSQL**: create a database, copy its connection string into `DATABASE_URL` on Render.
+## 🌐 Deployment
 
-`docker-compose.yml` at the repo root runs backend + Postgres together for local development or self-hosting.
+**Stack:** Neon (PostgreSQL) → Render (FastAPI) → Vercel (React)
 
-## Production notes
+### 1. Push to GitHub
+```bash
+git init && git add . && git commit -m "Initial commit"
+git remote add origin https://github.com/YOUR_USERNAME/hiresense-ai.git
+git push -u origin main
+```
 
-- Replace `Base.metadata.create_all` (dev convenience) with Alembic migrations before shipping schema changes to a real database.
-- Rotate `JWT_SECRET` to a long random value; never commit `.env`.
-- Add rate limiting on `/api/auth/*` and `/api/resumes/analyze` before exposing this publicly (resume analysis calls an LLM and is worth protecting from abuse).
-- The mock AI fallback is meant for development/demo continuity, not production — production should fail loudly (or queue/retry) if `GEMINI_API_KEY` is missing rather than silently mocking.
+### 2. Neon (Database)
+- Create free project at [neon.tech](https://neon.tech)
+- Copy the `postgresql://...` SQLAlchemy connection string
 
-## Extending this: adding the remaining flows
+### 3. Render (Backend)
+- New → Web Service → connect GitHub repo
+- Root directory: `backend`
+- Build command: `pip install -r requirements.txt`
+- Start command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- Add all backend env vars from the table above
 
-Each remaining flow (interview generation, answer evaluation, skill-gap
-analysis, dashboard) follows the same four-file pattern already used for
-resume analysis:
+### 4. Vercel (Frontend)
+- New Project → import GitHub repo
+- Root directory: `frontend`, Framework preset: `Vite`
+- Add env var: `VITE_API_URL=https://your-backend.onrender.com`
 
-1. **Prompt** — add a builder function in `backend/app/prompts/` (see `ats_evaluator.py` as a template).
-2. **Service** — add business logic in `backend/app/services/` that calls `ai_service.generate_json(prompt, mock_response)`.
-3. **Schema** — add Pydantic request/response models in `backend/app/schemas/`.
-4. **Route** — add a FastAPI router in `backend/app/api/`, include it in `app/main.py`.
+### 5. Update CORS
+Set `CORS_ORIGINS=https://your-app.vercel.app` on Render and redeploy.
 
-`backend/app/prompts/future_flows.py` has commented stubs for the three
-remaining prompt builders to start from. On the frontend, add a page under
-`src/pages/`, a service module under `src/services/`, and a route in `App.tsx`
-— `ResumeAnalysis.tsx` is the closest existing example (upload → call API →
-render structured AI output).
+---
 
-Suggested build order: Interview Creation → Interview Session (question-by-question
-with AI answer evaluation) → Skill Gap Analysis → Dashboard (aggregates data
-that already exists once the above are in place).
+## 🤖 Running Without a Gemini API Key
+
+`app/services/ai_service.py` detects if `GEMINI_API_KEY` is missing or still set to the placeholder value, and automatically returns deterministic mock responses for every AI task — so the full app is demoable without any API credentials. Mock responses are computed from keyword matching on the resume text, so they still meaningfully reflect the uploaded resume.
+
+Set a real key in `backend/.env` and restart to enable live Gemini responses.
+
+---
+
+## 🔒 Production Checklist
+
+- [ ] Replace `Base.metadata.create_all` with Alembic migrations
+- [ ] Set a strong random `JWT_SECRET` (e.g. `openssl rand -hex 32`)
+- [ ] Never commit `.env` files (covered by `.gitignore`)
+- [ ] Add rate limiting on `/api/auth/*` and `/api/resumes/analyze`
+- [ ] Set `ENVIRONMENT=production`
+- [ ] Set `CORS_ORIGINS` to only your production frontend URL
+- [ ] Use a keep-alive ping service to prevent Render cold starts on free tier
+
+---
+
+## 📄 License
+
+MIT
